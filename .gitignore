@@ -1,0 +1,14 @@
+# 编译/缓存
+*.log
+*.tmp
+.DS_Store
+node_modules/
+dist/
+build/
+*.pyc
+__pycache__/
+.idea/
+.vscode/
+*.iml
+.env
+.trae/

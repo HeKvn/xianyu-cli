@@ -1,0 +1,10 @@
+# 忽略源码
+src/
+# 忽略配置文件
+tsup.config.js
+# 忽略本地开发文件
+node_modules
+.git
+.vscode
+.env
+.gitignore
