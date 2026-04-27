@@ -4,7 +4,7 @@ import { existsSync } from 'node:fs'
 import { resolve } from 'node:path'
 import chalk from 'chalk'
 import { runAgent } from '../agent.mjs'
-import { loadConfig, loadEnvFromConfig, getMissingFields, saveConfig, REQUIRED_FIELDS } from './config.mjs'
+import { loadConfig, loadEnvFromConfig, getMissingFields, saveConfig } from './config.mjs'
 
 // 检测是否存在 .env 文件（开发环境）
 const hasLocalEnv = existsSync(resolve(process.cwd(), '.env'))

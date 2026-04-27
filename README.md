@@ -26,7 +26,7 @@ xianyu-cli
 `.xianyu-cli`文件内容如下
 
 ```
-# 你的llm api key 和 base url，建议使用openai的api
+# 你的llm api key 和 base url（请使用openai协议的）
 OPENAI_API_KEY=api-key
 OPENAI_API_BASE_URL=base-url
 MODEL_NAME=model-name
