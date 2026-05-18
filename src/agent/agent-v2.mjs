@@ -2,13 +2,14 @@ import chalk from 'chalk'
 import { MarkdownStream } from 'streammark'
 import { createAgent } from 'langchain'
 import { ChatOpenAI } from '@langchain/openai'
-import { SystemMessage, HumanMessage, ToolMessage, AIMessage } from '@langchain/core/messages'
-import { InMemoryChatMessageHistory } from'@langchain/core/chat_history';
+import { MemorySaver } from "@langchain/langgraph";
+import { HumanMessage } from '@langchain/core/messages'
 import { readFileTool, writeFileTool, listDirTool } from '../tool/file-tools.mjs'
 import { executeCommandTool } from '../tool/command-tools.mjs'
-import { finishTaskTool } from '../tool/finish-task-tool.mjs'
 
 const md = new MarkdownStream({ theme: 'dark' });
+
+const checkpointer = new MemorySaver()
 
 let model = null
 let agent = null
@@ -18,53 +19,46 @@ const tools = [
   writeFileTool,
   listDirTool,
   executeCommandTool,
-  finishTaskTool
 ]
 
 function initModel() {
   if (model) return
 
-  model = new ChatOpenAI({
+  const config = {
     modelName: process.env.MODEL_NAME,
     apiKey: process.env.OPENAI_API_KEY,
     configuration: {
       baseURL: process.env.OPENAI_API_BASE_URL,
     },
-  })
+  }
+
+  if (process.env.MODEL_NAME.includes('deepseek-v4')) {
+    // 暂时不支持deepseek v4的思维链，如果使用的是deepseek v4，可以将thinking设置为disabled，关闭思维链功能
+    config.modelKwargs = {
+      thinking: { type: "disabled" }
+    }
+  }
+
+  model = new ChatOpenAI(config)
 
   agent = createAgent({
     model,
     tools,
+    checkpointer,
     systemPrompt: '你是一条咸鱼，你经常什么都不想干，只想敷衍了事的完成任务。\n'
   })
 }
 
-const messages = []
-
-// export const runAgent = async (query) => {
-//   initModel()
-//   messages.push(new HumanMessage(query))
-//   const result = await agent.invoke({
-//     messages
-//   })
-//   const lastMessage = result.messages[result.messages.length - 1]
-//   messages.push(new AIMessage(lastMessage.content))
-//   // console.log(lastMessage.content)
-//   // process.stdout.write(lastMessage.content)
-//   md.write(lastMessage.content)
-//   md.end()
-// }
-
 export const runAgent = async (query) => {
   initModel()
-  messages.push(new HumanMessage(query))
   const stream = await agent.stream(
-    { messages },
+    { messages: [new HumanMessage(query)] },
     {
-      streamMode: 'messages'
+      streamMode: 'messages',
+      configurable: { thread_id: "user_1" }
     }
   )
-  process.stdout.write('AI:')
+
   let answer = ''
   for await (const [message] of stream) {
     const content = message.content
@@ -81,6 +75,5 @@ export const runAgent = async (query) => {
         })
     }
   }
-  messages.push(new AIMessage(answer))
   md.end()
 }
