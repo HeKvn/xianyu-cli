@@ -13,7 +13,7 @@ const hasLocalEnv = existsSync(resolve(process.cwd(), '.env'))
 config()
 
 async function setupConfig(rl) {
-    console.log(chalk.yellow('⚠️  检测到配置不完整，请先完成以下配置：\n'))
+    console.log(chalk.yellow('⚠️ 基础配置信息不完整，需要先填写一下：\n'))
 
     const config = await loadConfig()
     const missingFields = getMissingFields(config)
@@ -35,7 +35,7 @@ async function setupConfig(rl) {
             }
 
             if (!value) {
-                console.log(chalk.red('❌ 此项为必填项，请输入有效值'))
+                console.log(chalk.red('大哥你这个都不填我怎么上班 😆'))
             }
         }
 
@@ -64,14 +64,14 @@ export const runCli = async () => {
     // 如果不存在 .env 文件（生产环境），.xianyu 覆盖 .env
     await loadEnvFromConfig(!hasLocalEnv)
 
-    console.log(chalk.cyan('有思想的人总是孤独，还好我只是一条咸鱼😅\n'))
-    console.log(chalk.gray('输入你的问题，或输入 "exit" 退出\n'))
+    console.log(chalk.cyan('有思想的人总是孤独，还好我只是一条咸鱼 😅\n'))
+    console.log(chalk.gray('想问什么就问吧，或者输入 "exit" 让我走？\n'))
 
     while (true) {
         const query = await rl.question(chalk.yellow('> '))
 
         if (query.toLowerCase() === 'exit' || query.toLowerCase() === 'quit') {
-            console.log(chalk.cyan('👋 再见！'))
+            console.log(chalk.cyan('👋 光速下班！'))
             rl.close()
             break
         }
@@ -82,10 +82,8 @@ export const runCli = async () => {
 
         try {
             await runAgent(query)
-            // const response = await runAgent(query)
-            // console.log(chalk.green('🤖 AI:'), response, '\n')
         } catch (error) {
-            console.error(chalk.red('❌ 哥！出了点问题:'), error.message)
+            console.error(chalk.red('❌ 哥，出了点状况：'), error.message)
         }
     }
 }

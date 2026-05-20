@@ -2,18 +2,15 @@ import { homedir } from 'node:os'
 import { readFile, writeFile, mkdir, access } from 'node:fs/promises'
 import { join } from 'node:path'
 
-const CONFIG_DIR = '.config'
-const CONFIG_FILE = '.xianyu'
+const CONFIG_DIR = '.xianyu'
+const CONFIG_FILE = 'settings.json'
 
-const DEFAULT_CONFIG = `# 咸鱼Agent 配置文件
-# OpenAI API 配置
-OPENAI_API_KEY=
-OPENAI_API_BASE_URL=
-MODEL_NAME=
-
-# 安全护栏
-MAX_AGENT_CALLS=30
-`
+const DEFAULT_CONFIG = JSON.stringify({
+    OPENAI_API_KEY: '',
+    OPENAI_API_BASE_URL: '',
+    MODEL_NAME: '',
+    MAX_AGENT_CALLS: '10',
+}, null, 4)
 
 const REQUIRED_FIELDS = [
     { key: 'OPENAI_API_KEY', label: 'OpenAI API Key', description: '你的 OpenAI API 密钥' },
@@ -56,24 +53,7 @@ export async function loadConfig() {
     }
 
     const content = await readFile(configPath, 'utf-8')
-    const config = {}
-
-    for (const line of content.split('\n')) {
-        const trimmed = line.trim()
-        if (!trimmed || trimmed.startsWith('#')) continue
-
-        const equalIndex = trimmed.indexOf('=')
-        if (equalIndex === -1) continue
-
-        const key = trimmed.slice(0, equalIndex).trim()
-        const value = trimmed.slice(equalIndex + 1).trim()
-
-        if (key) {
-            config[key] = value
-        }
-    }
-
-    return config
+    return JSON.parse(content)
 }
 
 export async function loadEnvFromConfig(override = false) {
@@ -97,19 +77,7 @@ export function getMissingFields(config) {
 
 export async function saveConfig(config) {
     const configPath = await getConfigPath()
-
-    let content = await readFile(configPath, 'utf-8').catch(() => DEFAULT_CONFIG)
-
-    for (const [key, value] of Object.entries(config)) {
-        const regex = new RegExp(`^${key}=.*$`, 'm')
-        if (regex.test(content)) {
-            content = content.replace(regex, `${key}=${value}`)
-        } else {
-            content += `\n${key}=${value}`
-        }
-    }
-
-    await writeFile(configPath, content, 'utf-8')
+    await writeFile(configPath, JSON.stringify(config, null, 4), 'utf-8')
 }
 
 export { REQUIRED_FIELDS }
