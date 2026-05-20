@@ -4,7 +4,7 @@ import { existsSync } from 'node:fs'
 import { resolve } from 'node:path'
 import chalk from 'chalk'
 import { runAgent } from '../agent.mjs'
-import { loadConfig, loadEnvFromConfig, getMissingFields, saveConfig, REQUIRED_FIELDS } from './config.mjs'
+import { loadConfig, loadEnvFromConfig, getMissingFields, saveConfig } from './config.mjs'
 
 // 检测是否存在 .env 文件（开发环境）
 const hasLocalEnv = existsSync(resolve(process.cwd(), '.env'))
@@ -64,7 +64,7 @@ export const runCli = async () => {
     // 如果不存在 .env 文件（生产环境），.xianyu 覆盖 .env
     await loadEnvFromConfig(!hasLocalEnv)
 
-    console.log(chalk.cyan('🤖 欢迎使用咸鱼Agent！'))
+    console.log(chalk.cyan('有思想的人总是孤独，还好我只是一条咸鱼😅\n'))
     console.log(chalk.gray('输入你的问题，或输入 "exit" 退出\n'))
 
     while (true) {
@@ -85,7 +85,7 @@ export const runCli = async () => {
             // const response = await runAgent(query)
             // console.log(chalk.green('🤖 AI:'), response, '\n')
         } catch (error) {
-            console.error(chalk.red('❌ 出错了:'), error.message)
+            console.error(chalk.red('❌ 哥！出了点问题:'), error.message)
         }
     }
 }
