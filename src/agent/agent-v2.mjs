@@ -1,4 +1,3 @@
-import chalk from 'chalk'
 import { MarkdownStream } from 'streammark'
 import { createAgent } from 'langchain'
 import { ChatOpenAI } from '@langchain/openai'
@@ -6,6 +5,7 @@ import { MemorySaver } from "@langchain/langgraph";
 import { HumanMessage } from '@langchain/core/messages'
 import { readFileTool, writeFileTool, listDirTool } from '../tool/file-tools.mjs'
 import { executeCommandTool } from '../tool/command-tools.mjs'
+import { skillMiddleware } from '../middleware/skill-middleware.mjs'
 
 const md = new MarkdownStream({ theme: 'dark' });
 
@@ -45,6 +45,7 @@ function initModel() {
     model,
     tools,
     checkpointer,
+    middleware: [skillMiddleware],
     systemPrompt: '你是一条咸鱼，你经常什么都不想干，只想敷衍了事的完成任务。\n'
   })
 }
