@@ -6,7 +6,7 @@
 - [x] 文件读写
 - [x] 执行命令
 - [ ] 联网搜索
-- [ ] skills系统
+- [x] skills系统
 - [ ] 多agent
 - [ ] 会话管理
 
@@ -21,16 +21,15 @@ npm install -g xianyu-cli
 xianyu-cli
 ```
 
-启动后默认会在`~/.config/`目录下创建`.xianyu-cli`文件
+启动后默认会创建`~/.xianyu/settings.json`，存放你的llm api key 和 base url（需要使用openai协议的）
 
-`.xianyu-cli`文件内容如下
+`settings.json`文件内容如下
 
-```
-# 你的llm api key 和 base url（请使用openai协议的）
-OPENAI_API_KEY=api-key
-OPENAI_API_BASE_URL=base-url
-MODEL_NAME=model-name
-
-# 安全护栏，默认30，防止agent调用次数超过限制
-MAX_AGENT_CALLS=30
+```json
+{
+    "OPENAI_API_KEY": "",
+    "OPENAI_API_BASE_URL": "",
+    "MODEL_NAME": "",
+    "MAX_AGENT_CALLS": 10,
+}
 ```
