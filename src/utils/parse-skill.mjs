@@ -26,7 +26,7 @@ export const parseSkill = (filePath) => {
  * @param {string} dirPath - 目录路径（其下为多个子文件夹，每个子文件夹内含 SKILL.md）
  * @returns {Array<{ name: string, description: string, license: string, content: string, meta: object, filePath: string }>}
  */
-export const parseSkills = (dirPath = path.join(os.homedir(), '.agents', 'skills')) => {
+export const parseSkills = (dirPath = path.join(os.homedir(), '.xianyu', 'skills')) => {
   if (!fs.existsSync(dirPath)) {
     return [];
   }

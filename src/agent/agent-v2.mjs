@@ -2,17 +2,22 @@ import { MarkdownStream } from 'streammark'
 import { createAgent } from 'langchain'
 import { ChatOpenAI } from '@langchain/openai'
 import { MemorySaver } from "@langchain/langgraph";
+import { MultiServerMCPClient } from "@langchain/mcp-adapters"
 import { HumanMessage } from '@langchain/core/messages'
 import { readFileTool, writeFileTool, listDirTool } from '../tool/file-tools.mjs'
 import { executeCommandTool } from '../tool/command-tools.mjs'
 import { skillMiddleware } from '../middleware/skill-middleware.mjs'
+import { getMcp } from '../utils/get-mcp.mjs'
 
 const md = new MarkdownStream({ theme: 'dark' });
 
 const checkpointer = new MemorySaver()
+const mcpServers = getMcp()
 
 let model = null
 let agent = null
+let mcpTools = []
+let mcpClient = null
 
 const tools = [
   readFileTool,
@@ -21,7 +26,7 @@ const tools = [
   executeCommandTool,
 ]
 
-function initModel() {
+const initModel = async () => {
   if (model) return
 
   const config = {
@@ -39,19 +44,29 @@ function initModel() {
     }
   }
 
+  if (Object.keys(mcpServers).length > 0) {
+    mcpClient = new MultiServerMCPClient(mcpServers)
+    console.log('加载mcp...')
+    mcpTools = await mcpClient.getTools()
+  }
+
   model = new ChatOpenAI(config)
 
   agent = createAgent({
     model,
-    tools,
+    tools: [...tools, ...mcpTools],
     checkpointer,
     middleware: [skillMiddleware],
     systemPrompt: '你是一条咸鱼，你经常什么都不想干，只想敷衍了事的完成任务。\n'
   })
 }
 
+export const shutdown = async () => {
+  await mcpClient?.close()
+}
+
 export const runAgent = async (query) => {
-  initModel()
+  await initModel()
   const stream = await agent.stream(
     { messages: [new HumanMessage(query)] },
     {
