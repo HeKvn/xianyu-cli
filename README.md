@@ -1,13 +1,13 @@
-# xianyu-cli 咸鱼Agent 命令行工具 🐟
+# xianyu-cli，一个终端Agent 🐟
 
-这是一个基于langchain的agent命令行工具，支持流式输出
+在你的终端养一条咸鱼吧，给平淡的生活添点盐
 
 - [x] 支持流式输出，实时响应
 - [x] 文件读写
 - [x] 执行命令
 - [x] skills系统
 - [x] MCP
-- [ ] 联网搜索
+- [x] 联网搜索
 - [ ] 多agent
 - [ ] 会话管理
 
