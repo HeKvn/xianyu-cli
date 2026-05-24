@@ -6,7 +6,7 @@ import { MultiServerMCPClient } from "@langchain/mcp-adapters"
 import { HumanMessage } from '@langchain/core/messages'
 import { readFileTool, writeFileTool, listDirTool } from '../tool/file-tools.mjs'
 import { executeCommandTool } from '../tool/command-tools.mjs'
-import { duckGoSearch } from '../tool/web-search.mjs'
+import { webSearchTool } from '../tool/web-search.mjs'
 import { skillMiddleware } from '../middleware/skill-middleware.mjs'
 import { getMcp } from '../utils/get-mcp.mjs'
 
@@ -25,7 +25,7 @@ const tools = [
   writeFileTool,
   listDirTool,
   executeCommandTool,
-  duckGoSearch
+  webSearchTool
 ]
 
 const initModel = async () => {
