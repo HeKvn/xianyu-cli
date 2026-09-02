@@ -1,5 +1,5 @@
 import { createAgent } from 'langchain'
-import { webSearchTool } from '../tool/web-search.mjs'
+import { webSearchTool } from '../../tool/web-search.mjs'
 
 export const createSearchAgent = (model) => createAgent({
   model,
