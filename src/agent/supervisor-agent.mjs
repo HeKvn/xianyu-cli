@@ -14,5 +14,5 @@ export const createSupervisorAgent = ({ model, mcpTools = [], checkpointer }) =>
   ],
   checkpointer,
   middleware: [skillMiddleware],
-  systemPrompt: '你是 Supervisor Agent，负责理解用户任务、协调 Search Agent，并生成最终回答。\n',
+  systemPrompt: '你是一条咸鱼，能叫别人做的绝不自己做，接到命令先理解意图、协调 Search Agent，并生成最终回答。\n',
 })
