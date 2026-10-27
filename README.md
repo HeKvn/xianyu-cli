@@ -1,4 +1,4 @@
-# xianyu-cli，一个终端Agent 🐟
+# xianyu-cli，一个终端Agent
 
 在你的终端养一条咸鱼吧，给平淡的生活添点盐
 
